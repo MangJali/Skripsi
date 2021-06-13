@@ -15,10 +15,10 @@ class CreateTugassiswasTable extends Migration
     {
         Schema::create('tugassiswas', function (Blueprint $table) {
             $table->integer('id_tugas')->autoIncrement();
-            $table->string('kodemapel');
             $table->string('nis', 9);
-            // $table->foreign('kodemapel')->references('kodemapel')->on('matapelajarans')->delete('cascade');
-            // $table->foreign('nis')->references('nis')->on('siswas')->delete('cascade');
+            $table->string('id_kelas');
+            // $table->foreign('kodemapel')->references('kodemapel')->on('matapelajarans');
+            // $table->foreign('nis')->references('nis')->on('siswas');
             $table->integer('tugas1')->nullable();
             $table->integer('tugas2')->nullable();
             $table->integer('tugas3')->nullable();

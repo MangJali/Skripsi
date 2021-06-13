@@ -21,8 +21,7 @@ class CreateSiswasTable extends Migration
             $table->string('tanggallahir');
             $table->string('jeniskelamin');
             $table->string('sekolahumum');
-            $table->string('kodekelas');
-            // $table->foreign('kodekelas')->references('kodekelas')->on('kelases')->delete('cascade');
+            // $table->foreign('kodekelas')->references('kodekelas')->on('kelases');
             $table->timestamps();
         });
     }

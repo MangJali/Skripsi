@@ -51,7 +51,7 @@ class UlanganHarianController extends Controller
                 }
             }
         }
-        return view('datanilaisiswa/tambahhulanganharian', ['uhbaru' => $array]);
+        return view('datanilaisiswa/tambahulanganharian', ['uhbaru' => $array]);
     }
 
     /**
@@ -72,7 +72,7 @@ class UlanganHarianController extends Controller
                 $nilaiuh->save();
             }
         }
-        return redirect('datanilaisiswa/ulanganharian')->with('sukses','Sukses menambahkan data!');
+        return redirect('datanilaisiswa/ulanganharian')->with('sukses', 'Sukses menambahkan data!');
     }
 
     /**

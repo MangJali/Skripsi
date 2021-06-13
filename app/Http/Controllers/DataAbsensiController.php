@@ -77,7 +77,7 @@ class DataAbsensiController extends Controller
                 $nilaiuts->save();
             }
         }
-        return redirect('/dataabsensi')->with('sukses',"sukses menambahkan data!");
+        return redirect('/dataabsensi')->with('sukses', "sukses menambahkan data!");
     }
 
     /**
@@ -99,7 +99,8 @@ class DataAbsensiController extends Controller
      */
     public function edit($id)
     {
-        //
+        $absensi = Absensi::where("id_absensi", $id)->first();
+        return view('dataabsensi/ubahabsensi', ["absensi" => $absensi]);
     }
 
     /**
@@ -111,7 +112,9 @@ class DataAbsensiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $absensi = Absensi::where("id_absensi", $id)->first();
+        $absensi->where("id_absensi", $id)->update($request->except(['_token']));
+        return redirect('dataabsensi')->with("sukses", "berhasil mengupdate data absen!");
     }
 
     /**

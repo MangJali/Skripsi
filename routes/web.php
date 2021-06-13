@@ -51,7 +51,10 @@ Route::get('/datasiswa/tambahdatasiswa', [DataSiswaController::class, 'create'])
 // Controller Tenaga Pendidik
 Route::get('/tenagapendidik', [TenagaPendidikController::class, 'index'])->middleware(['auth', 'Checkrole:admin']);
 Route::get('/dataguru/tambahguru', [TenagaPendidikController::class, 'create'])->middleware(['auth', 'Checkrole:admin']);
+Route::get('/dataguru/ubahguru/{nip}/edit', [TenagaPendidikController::class, 'edit'])->middleware(['auth', 'Checkrole:admin']);
+Route::post('/dataguru/{nip}/update', [TenagaPendidikController::class, 'update'])->middleware(['auth', 'Checkrole:admin']);
 Route::post('/tenagapendidik', [TenagaPendidikController::class, 'store'])->middleware(['auth', 'Checkrole:admin']);
+Route::post('/dataguru/{id}/delete', [TenagaPendidikController::class, 'destroy'])->middleware(['auth', 'Checkrole:admin']);
 
 // Controller Data Mapel
 Route::get('/datamapel', [DataMapelController::class, 'index'])->middleware(['auth', 'Checkrole:admin']);
@@ -67,7 +70,9 @@ Route::post('/datasekolahumum', [DataSekolahUmumController::class, 'store'])->mi
 // Controller Data Absensi Siswa
 Route::get('/dataabsensi', [DataAbsensiController::class, 'index'])->middleware('auth');
 Route::get('/dataabsensi/add', [DataAbsensiController::class, 'create'])->middleware(['auth', 'Checkrole:admin,']);
-Route::get('/dataabsensi/store', [DataAbsensiController::class, 'store'])->middleware(['auth', 'Checkrole:admin']);
+Route::get('/dataabsensi/ubahabsensi/{id}/edit', [DataAbsensiController::class, 'edit'])->middleware(['auth', 'Checkrole:admin']);
+Route::post('/dataabsensi/{id}/update', [DataAbsensiController::class, 'update'])->middleware(['auth', 'Checkrole:admin']);
+Route::post('/dataabsensi/store', [DataAbsensiController::class, 'store'])->middleware(['auth', 'Checkrole:admin']);
 
 // Controller Data Penilain Hasil Belajar
 Route::get('/penilaianhasilbelajar', [PenilaianHasilBelajarController::class, 'index'])->middleware('auth');

@@ -1,6 +1,6 @@
 @extends('layout.main')
 
-@section('title', 'Tenaga Pendidik')
+@section('title', 'Ubah Data Guru')
 
 
 
@@ -12,31 +12,31 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col md-4">
-                        <h1 class="text-bold text-center">TAMBAH GURU</h1>
+                        <h1 class="text-bold text-center">Ubah Data Tenaga Pendidik</h1>
                         <div class="card card-success card-outline mt-4">
                             <div class="card-body">
-                                <form class="mt-3" method="POST" action="/tenagapendidik">
+                                <form class="mt-3" method="POST" action="/dataguru/{{ $tenagapendidik->nip }}/update">
                                     @csrf
                                     <div class="form-row">
                                         <div class="form-group col-md-6">
                                             <label for="nip">NIP</label>
-                                            <input type="text" class="form-control form-control-sm " id="nip"
-                                                placeholder="NIP" name="nip">
+                                            <input type="text" class="form-control" id="nip" placeholder="Nama Lengkap"
+                                                name="nip" value="{{ $tenagapendidik->nip }}" readonly>
                                         </div>
                                         <div class="form-group col-md-6">
                                             <label for="namalengkap">NAMA LENGKAP</label>
-                                            <input type="text" class="form-control form-control-sm" id="inputNIP"
-                                                placeholder="Nama Lengkap" name="namalengkap">
+                                            <input type="text" class="form-control" id="inputNIP" placeholder="Nama Lengkap"
+                                                name="namapendidik" value="{{ $tenagapendidik->namapendidik }}">
                                         </div>
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col md-col-6">
                                             <label for="alamat">ALAMAT</label>
-                                            <input type="text" class="form-control form-control-sm" id="alamat"
-                                                placeholder="Alamat" name="alamat">
+                                            <input type="text" class="form-control" id="alamat" placeholder="Alamat"
+                                                name="alamat" value="{{ $tenagapendidik->alamat }}">
                                         </div>
-                                        <div class="form-group col md-col-4">
-                                            <label>JENIS KELAMAIN</label>
+                                        <div class="form-group col md-col-6">
+                                            <label for="jeniskelamin">JENIS KELAMAIN</label>
                                             <div class="ml-2">
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="jeniskelamin"

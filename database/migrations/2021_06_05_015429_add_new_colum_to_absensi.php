@@ -15,7 +15,6 @@ class AddNewColumToAbsensi extends Migration
     {
         Schema::table('absensis', function (Blueprint $table) {
             $table->string("nis");
-            $table->string("nip");
             $table->string("kodemapel");
         });
     }

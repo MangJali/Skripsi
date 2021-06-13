@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Matapelajaran;
-use App\Models\Tenagapendidik;
 use Illuminate\Http\Request;
 
-class DataMapelController extends Controller
+class PesertaKelasController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +14,6 @@ class DataMapelController extends Controller
     public function index()
     {
         //
-        $mapels = Matapelajaran::all();
-        return view('datamapel.index', compact('mapels'));
     }
 
     /**
@@ -27,8 +23,7 @@ class DataMapelController extends Controller
      */
     public function create()
     {
-        $guru = Tenagapendidik::all();
-        return view('datamapel.tambahmapel', compact('guru'));
+        //
     }
 
     /**
@@ -40,13 +35,6 @@ class DataMapelController extends Controller
     public function store(Request $request)
     {
         //
-        $mapels = new Matapelajaran;
-        $mapels->id_mapel = $request->kodematapelajaran;
-        $mapels->namamapel = $request->matapelajaran;
-        $mapels->tahunkurikulum = $request->thnkurikulum;
-        $mapels->save();
-
-        return redirect('/datamapel')->with('sukses', "Sukses menambahkan data");
     }
 
     /**
@@ -57,6 +45,7 @@ class DataMapelController extends Controller
      */
     public function show($id)
     {
+        //
     }
 
     /**
@@ -90,9 +79,6 @@ class DataMapelController extends Controller
      */
     public function destroy($id)
     {
-        $mapel = Matapelajaran::where('kodemapel', $id)->first();
-        if ($mapel->delete()) {
-            return redirect('/datamapel')->with('sukses', "Sukses menghapus data!");
-        }
+        //
     }
 }

@@ -15,10 +15,10 @@ class CreateUjianakhirsemestersTable extends Migration
     {
         Schema::create('ujianakhirsemesters', function (Blueprint $table) {
             $table->integer('id_uas')->autoIncrement();
-            $table->string('kodemapel');
-            $table->string('nis');
-            // $table->foreign('kodemapel')->references('kodemapel')->on('matapelajarans')->delete('cascade');
-            // $table->foreign('nis')->references('nis')->on('siswas')->delete('cascade');
+            $table->string('nis', 9);
+            $table->string('id_kelas');
+            // $table->foreign('kodemapel')->references('kodemapel')->on('matapelajarans');
+            // $table->foreign('nis')->references('nis')->on('siswas');
             $table->string('ujianakhirsemester');
             $table->timestamps();
         });

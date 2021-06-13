@@ -14,10 +14,14 @@ class CreateKelasesTable extends Migration
     public function up()
     {
         Schema::create('kelases', function (Blueprint $table) {
-            $table->string('kodekelas')->primary();
+            $table->integer('id_kelas')->primary();
+            $table->integer('id_mapel');
+            $table->string('nip');
+            $table->integer('tahnakademik');
+            $table->boolean('semester');
             $table->string('kelas');
-            $table->integer('id_semester');
-            // $table->foreign('id_semester')->references('id_semester')->on('semester')->delete('cascade');
+            $table->char('rombel');
+            // $table->foreign('id_semester')->references('id_semester')->on('semester');
             $table->timestamps();
         });
     }

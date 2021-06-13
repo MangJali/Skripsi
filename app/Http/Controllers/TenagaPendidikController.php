@@ -7,6 +7,7 @@ use App\Models\Tenagapendidik;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Stmt\TryCatch;
 
 class TenagaPendidikController extends Controller
 {
@@ -41,7 +42,7 @@ class TenagaPendidikController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
         $user = new User();
         $user->name = $request->namalengkap;
         $user->email = $request->nip;
@@ -54,17 +55,16 @@ class TenagaPendidikController extends Controller
                 $tenagapendidiks->namapendidik = $request->namalengkap;
                 $tenagapendidiks->alamat = $request->alamat;
                 $tenagapendidiks->jeniskelamin = $request->jeniskelamin;
-                $tenagapendidiks->userid = $user->id;
-                ;
-                if($tenagapendidiks->save()){
-                   return redirect('/tenagapendidik')->with('sukses',"Sukses menambah tenaga kerja");
-                }else{
+                $tenagapendidiks->userid = $user->id;;
+                if ($tenagapendidiks->save()) {
+                    return redirect('/tenagapendidik')->with('sukses', "Sukses menambah tenaga kerja");
+                } else {
                     $user->delete();
                 }
             }
         } catch (\Exception $e) {
         }
-        return redirect('/tenagapendidik')->with('gagal',"Gagal menambah tenaga kerja");
+        return redirect('/tenagapendidik')->with('gagal', "Gagal menambah tenaga kerja");
     }
 
     /**
@@ -84,9 +84,10 @@ class TenagaPendidikController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($nip)
     {
-        //
+        $tenagapendidik = Tenagapendidik::where("nip", $nip)->first();
+        return view('dataguru/ubahguru', ["tenagapendidik" => $tenagapendidik]);
     }
 
     /**
@@ -96,9 +97,11 @@ class TenagaPendidikController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $nip)
     {
-        //
+        $tenagapendidik = Tenagapendidik::where("nip", $nip)->first();
+        $tenagapendidik->where("nip", $nip)->update($request->except(['_token']));
+        return redirect('/tenagapendidik')->with("sukses", "berhasil mengupdate data absen!");
     }
 
     /**
@@ -109,6 +112,20 @@ class TenagaPendidikController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $tenagapendidik = Tenagapendidik::where('nip', $id)->first();
+
+        try {
+            if ($tenagapendidik->delete()) {
+                $user = new User();
+                $user->role = 'guru';
+                if ($user->delete()) {
+                    return redirect('/tenagapendidik')->with('sukses', "Sukses menghapus data!");
+                } else {
+                    $user->delete();
+                }
+            }
+        } catch (\Throwable $th) {
+        }
+        return redirect('/tenagapendidik')->with('gagal', "Gagal menghapus tenaga pendidik");
     }
 }

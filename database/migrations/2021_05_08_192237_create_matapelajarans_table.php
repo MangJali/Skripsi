@@ -14,12 +14,9 @@ class CreateMatapelajaransTable extends Migration
     public function up()
     {
         Schema::create('matapelajarans', function (Blueprint $table) {
-            $table->string('kodemapel')->primary();
-            $table->string('matapelajaran');
-            $table->string('nip');
-            $table->integer('id_semester');
-            // $table->foreign('nip')->references('nip')->on('guru')->delete('cascade');
-            // $table->foreign('id_semester')->references('id_semester')->on('semester')->delete('cascade');
+            $table->string('id_mapel')->primary();
+            $table->string('namamapel');
+            $table->string('tahunkurikulum');
             $table->timestamps();
         });
     }
