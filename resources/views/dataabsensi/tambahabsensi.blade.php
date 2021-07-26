@@ -12,20 +12,27 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col md-4">
-                        <h1 class="text-bold text-center">Masukkan Nilai Tugas</h1>
+                        <h1 class="text-bold text-center">TAMBAH DATA ABSENSI</h1>
                         <div class="card card-success card-outline mt-4">
                             <div class="card-body">
                                 <form class="col" method="POST" action="/dataabsensi/store">
                                     @csrf
-                                    <table class="table mt-3 table-sm table-responsive-sm text-center">
+                                    <table class="table mt-3 table-sm table-responsive-sm text-center" id="tablenilai">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th scope="col" class="col-sm-auto">NO</th>
+                                                <th scope="col" class="col-sm-1">KODE</th>
+                                                <th scope="col" class="col-sm-1">PESERTA</th>
                                                 <th scope="col" class="col-sm-2">NIS</th>
-                                                <th scope="col" class="col-sm-3">NAMA</th>
-                                                <th scope="col" class="col-sm-2">HADIR</th>
-                                                <th scope="col" class="col-sm-2">IJIN</th>
-                                                <th scope="col" class="col-sm-2">ALPHA</th>
+                                                <th scope="col" class="col-sm-1">NAMA</th>
+                                                <th scope="col" class="col-sm-1">KODE</th>
+                                                <th scope="col" class="col-sm-1">KELAS</th>
+                                                <th scope="col" class="col-sm-1">KODE</th>
+                                                <th scope="col" class="col-sm-1">MAPEL</th>
+                                                <th scope="col" class="col-sm-2">NIP</th>
+                                                <th scope="col" class="col-sm-auto">HADIR</th>
+                                                <th scope="col" class="col-sm-auto">IJIN</th>
+                                                <th scope="col" class="col-sm-auto">ALPHA</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -33,14 +40,49 @@
                                                 <tr class="text-sm-center">
                                                     <th scope="row">{{ $loop->iteration }}</th>
                                                     <td>
-                                                        <input class="form-control text-sm-center" type="text"
-                                                            name="nis[{{ $loop->iteration }}]" readonly
-                                                            value={{ $item->nis }}>
+                                                        <input class="form-control text-sm-center" type="number"
+                                                            name="id_absensi[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->id }}>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control text-sm-center" type="number"
+                                                            name="id_peserta[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->id }}>
                                                     </td>
                                                     <td>
                                                         <input class="form-control text-sm-center" type="text"
-                                                            name="kodemapel[{{ $loop->iteration }}]" readonly
-                                                            value={{ $item->kodemapel }}>
+                                                            name="nis[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->nis }}>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control text-sm-center" type="text"
+                                                            name="siswa[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->siswa->namalengkap }}>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control text-sm-center" type="text"
+                                                            name="id_kelas[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->masterkelas->id_kelas }}>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control text-sm-center" type="text"
+                                                            name="kelas[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->masterkelas->kelas->kelas }}>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control text-sm-center" type="text"
+                                                            name="id_mapel[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->masterkelas->id_mapel }}>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control text-sm-center" type="text"
+                                                            name="mapel[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->masterkelas->id_mapel }}>
+                                                    </td>
+                                                    <td>
+                                                        <input class="form-control text-sm-center" type="text"
+                                                            name="nip[{{ $loop->iteration }}]" readonly
+                                                            value={{ $item->pesertakelas->masterkelas->guru->nip }}>
                                                     </td>
                                                     <td>
                                                         <input class="form-control-range text-sm-center" type="text"
@@ -70,4 +112,12 @@
     </div>
     <!-- /.content-wrapper -->
 
+@endsection
+@section('script')
+    <script>
+        $(document).ready(function() {
+            $('#tablenilai').DataTable();
+        });
+
+    </script>
 @endsection

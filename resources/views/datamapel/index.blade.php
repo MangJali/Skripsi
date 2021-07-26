@@ -20,14 +20,15 @@
                                     Tambah Mapel
                                 </a>
                                 <br> <br>
-                                <table class="table mt-3" id="tablenilai">
+                                <table class="table table-bordered mt-3 table-sm table-responsive-sm text-center"
+                                    id="tablenilai" style="font-family: cursive">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th scope="col" class="col-sm-auto">NO</th>
-                                            <th scope="col" class="col-sm-2">Kode</th>
-                                            <th scope="col" class="col-sm-6">Mata Pelajaran</th>
-                                            <th scope="col" class="col-sm-2">Kurikulum</th>
-                                            <th scope="col" class="col-sm-2">AKSI</th>
+                                            <th scope="col" class="col-sm-2 text-uppercase">Kode</th>
+                                            <th scope="col" class="col-sm-6 text-uppercase">Mata Pelajaran</th>
+                                            <th scope="col" class="col-sm-2 text-uppercase">Kurikulum</th>
+                                            <th scope="col" class="col-sm-2 text-uppercase">AKSI</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -38,12 +39,14 @@
                                                 <td>{{ $mp->namamapel }}</td>
                                                 <td>{{ $mp->tahunkurikulum }}</td>
                                                 <td>
-                                                    <a href="" class="badge badge-success">Ubah</a>
-                                                    <form class="badge" action="/datamapel/{{ $mp->kodemapel }}/delete"
-                                                        method="POST">
+                                                    <a href="/datamapel/ubahmapel/{{ $mp->id_mapel }}/edit"
+                                                        class="btn btn-sm btn-success">Ubah</a>
+                                                    <form class="badge" action="/datamapel/{{ $mp->id_mapel }}/delete"
+                                                        method="POST" onsubmit="return confirm('Yakin Menghapus Data?')">
                                                         @csrf
                                                         {{ method_field('POST') }}
-                                                        <button class="badge badge-danger" type="submit">Hapus</button>
+                                                        <button class=" btn btn-sm btn-danger" type="submit">
+                                                            Hapus</button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -67,6 +70,5 @@
         $(document).ready(function() {
             $('#tablenilai').DataTable();
         });
-
     </script>
 @endsection

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
 use App\Models\Matapelajaran;
+use App\Models\Pesertakelas;
 use App\Models\Siswaa;
 use App\Models\Tenagapendidik;
 use App\Models\Ujiantengahsemester;
@@ -17,6 +19,7 @@ class UTSController extends Controller
      */
     public function index()
     {
+        $kelas = Kelas::all();
         if (auth()->user()->role == "admin") {
             $nilaiuts = Ujiantengahsemester::all();
         } else {
@@ -27,7 +30,7 @@ class UTSController extends Controller
             // $nilaitugas->mapel()->wherePivot("nip",$guru->nip)->get();
             // print_r($nilaitugas);
         }
-        return view('datanilaisiswa.ujiantengahsemester', compact('nilaiuts'));
+        return view('datanilaisiswa.ujiantengahsemester', ['nilaiuts' => $nilaiuts], ['kelas' => $kelas]);
     }
 
     /**
@@ -37,42 +40,50 @@ class UTSController extends Controller
      */
     public function create()
     {
-        $mapel = Matapelajaran::all();
-        $siswa = Siswaa::all();
+        $kelas = Pesertakelas::all();
         $array = [];
-        foreach ($siswa as $key => $value) {
-            foreach ($mapel as $key1 => $value1) {
-                $tugassiswa = Ujiantengahsemester::where(["kodemapel" => $value1->kodemapel, "nis" => $value->nis])->get();
-                if (count($tugassiswa) == 0) {
-                    $utsbaru = new Ujiantengahsemester();
-                    $utsbaru->nis = $value->nis;
-                    $utsbaru->kodemapel = $value1->kodemapel;
-                    array_push($array, $utsbaru);
-                }
+        foreach ($kelas as $value) {
+            $tugassiswa = Ujiantengahsemester::where(["id_uts" => $value->id])->get();
+            if (count($tugassiswa) == 0) {
+                $utsbaru = new Ujiantengahsemester();
+                $utsbaru->id = $value->id;
+                array_push($array, $utsbaru);
             }
         }
         return view('datanilaisiswa/tambahujiantengahsemester', ['utsbaru' => $array]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+    public function filter_kelas(Request $request)
+    {
+        if ($request->has('kelas')) {
+            $tugas = Ujiantengahsemester::select("siswas.namalengkap", "kelases.kelas", "matapelajarans.namamapel", "tugassiswas.*")
+                ->join("kelases", "tugassiswas.id_kelas", "=", "kelases.id_kelas")
+                ->join("siswas", "tugassiswas.nis", "=", "siswas.nis")
+                ->join("matapelajarans", "tugassiswas.id_mapel", "=", "matapelajarans.id_mapel")
+                ->where('kelases.id_kelas', '=', $request->kelas)
+                ->get();
+        }
+
+
+        return response()->json($tugas);
+    }
+
     public function store(Request $request)
     {
-        if(isset($request->nis)){
-            foreach ($request->nis as $key => $value) {
+        if (isset($request->id_uts)) {
+            foreach ($request->id_uts as $key => $value) {
                 $nilaiuts = new Ujiantengahsemester;
-                $nilaiuts->nis = $value;
-                $nilaiuts->kodemapel = $request->kodemapel[$key];
-                $nilaiuts->ujiantengahsemester = $request->uts[$key];
+                $nilaiuts->id_uts = $value;
+                $nilaiuts->id = $request->id_peserta[$key];
+                $nilaiuts->nis = $request->nis[$key];
+                $nilaiuts->id_kelas = $request->id_kelas[$key];
+                $nilaiuts->id_mapel = $request->id_mapel[$key];
+                $nilaiuts->nip = $request->nip[$key];
+                $nilaiuts->ujiantengahsemester = $request->uts[$key] == null ? 0 : $request->tugas1[$key];
                 $nilaiuts->save();
             }
-            
         }
-        return redirect('datanilaisiswa/ujiantengahsemester')->with('sukses',"Sukses menambahkan data");
+        return redirect('datanilaisiswa/ujiantengahsemester')->with('sukses', "Sukses menambahkan data");
     }
 
     /**
@@ -94,8 +105,8 @@ class UTSController extends Controller
      */
     public function edit($id)
     {
-        $uts=Ujiantengahsemester::where("id_uts",$id)->first();
-        return view('datanilaisiswa/ubahujiantengahsemester',["uts"=>$uts]);
+        $uts = Ujiantengahsemester::where("id_uts", $id)->first();
+        return view('datanilaisiswa/ubahujiantengahsemester', ["uts" => $uts]);
     }
 
     /**
@@ -107,9 +118,9 @@ class UTSController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $uts=Ujiantengahsemester::where("id_uts",$id)->first();
-        $uts->where("id_uts",$id)->update($request->except(['_token']));
-        return redirect('datanilaisiswa/ujiantengahsemester')->with("sukses","berhasil mengupdate data tugas!");
+        $uts = Ujiantengahsemester::where("id_uts", $id)->first();
+        $uts->where("id_uts", $id)->update($request->except(['_token']));
+        return redirect('datanilaisiswa/ujiantengahsemester')->with("sukses", "berhasil mengupdate data tugas!");
     }
 
     /**
@@ -120,6 +131,9 @@ class UTSController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $uts = Ujiantengahsemester::where('id_uts', $id)->first();
+        if ($uts->delete()) {
+            return redirect('/datanilaisiswa/ujiantengahsemester')->with('sukses', "Sukses menghapus data!");
+        }
     }
 }

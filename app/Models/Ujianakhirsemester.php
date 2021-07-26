@@ -15,11 +15,23 @@ class Ujianakhirsemester extends Model
 
     protected $keyType = 'integer';
 
-    protected $fillable = ['id_uas', 'kodemapel', 'nis', 'ujianakhirsemester'];
+    protected $fillable = ['id_uas', 'id', 'nis', 'id_kelas', 'id_mapel', 'ujianakhirsemester'];
 
+    public function pesertakelas()
+    {
+        return $this->belongsTo(pesertakelas::class, 'id');
+    }
+    public function masterkelas()
+    {
+        return $this->belongsTo(Masterkelas::class, 'id_master');
+    }
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas');
+    }
     public function mapel()
     {
-        return $this->belongsTo(Matapelajaran::class, 'kodemapel');
+        return $this->belongsTo(Matapelajaran::class, 'id_mapel');
     }
     public function siswa()
     {

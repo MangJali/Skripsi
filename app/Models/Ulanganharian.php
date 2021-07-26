@@ -14,15 +14,23 @@ class Ulanganharian extends Model
 
     protected $keyType = 'integer';
 
-    protected $fillable = ['id_uh', 'kodemapel', 'nis', 'ulanganharian'];
+    protected $fillable = ['id_uh', 'id_kelas', 'id_mapel', 'nis', 'ulanganharian1', 'ulanganharian2'];
 
-    public function mapel()
+    public function pesertakelas()
     {
-        return $this->belongsTo(Matapelajaran::class, 'kodemapel');
+        return $this->belongsTo(Pesertakelas::class, 'id')->withDefault();
     }
 
+    public function kelas()
+    {
+        return $this->belongsTo(Kelas::class, 'id_kelas')->withDefault();
+    }
     public function siswa()
     {
-        return $this->belongsTo(Siswaa::class,"nis");
+        return $this->belongsTo(Siswaa::class, 'nis');
+    }
+    public function mapel()
+    {
+        return $this->belongsTo(Matapelajaran::class, 'id_mapel')->withDefault();
     }
 }

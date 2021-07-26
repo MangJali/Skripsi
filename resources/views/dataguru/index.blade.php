@@ -20,15 +20,16 @@
                                     Tambah Guru
                                 </a>
                                 <br> <br>
-                                <table class="table mt-3 table-sm table-responsive-sm" id="tablenilai">
+                                <table class="table table-bordered mt-3 table-sm table-responsive-sm text-center"
+                                    id="tablenilai" style="font-family: cursive">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th scope="col">NO</th>
-                                            <th scope="col">NIP</th>
-                                            <th scope="col">NAMA</th>
-                                            <th scope="col">ALAMAT</th>
-                                            <th scope="col">JENIS KELAMIN</th>
-                                            <th scope="col">AKSI</th>
+                                            <th scope="col" class="col-auto">NO</th>
+                                            <th scope="col" class="col-2">NIP</th>
+                                            <th scope="col" class="col-3">NAMA</th>
+                                            <th scope="col" class="col-3">ALAMAT</th>
+                                            <th scope="col" class="col-2">JENIS KELAMIN</th>
+                                            <th scope="col" class="col-auto">AKSI</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -41,13 +42,13 @@
                                                 <td>{{ $pdk->jeniskelamin }}</td>
                                                 <td>
                                                     <a href="/dataguru/ubahguru/{{ $pdk->nip }}/edit"
-                                                        class="badge badge-success">Ubah</a>
-                                                    {{-- <form class="badge" action="/dataguru/{{ $pdk->nip }}/delete"
-                                                        method="POST">
+                                                        class="btn btn-sm btn-success">Ubah</a>
+                                                    <form class="badge" action="/dataguru/{{ $pdk->nip }}/delete"
+                                                        method="POST" onsubmit="return confirm('Yakin Menghapus Data?')">
                                                         @csrf
                                                         {{ method_field('POST') }}
-                                                        <button class="badge badge-danger" type="submit">Hapus</button>
-                                                    </form> --}}
+                                                        <button class="btn btn-sm btn-danger" type="submit">Hapus</button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -70,6 +71,5 @@
         $(document).ready(function() {
             $('#tablenilai').DataTable();
         });
-
     </script>
 @endsection

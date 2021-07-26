@@ -19,13 +19,14 @@
                             role="button" aria-pressed="true">
                             Tambah Data
                         </a> --}}
-                                <table class="table mt-3 table-sm table-responsive-sm text-center" id="tablenilai">
+                                <table class="table table-bordered mt-3 table-sm table-responsive-sm text-center"
+                                    id="tablenilai" style="font-family: cursive">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th scope="col" class="col-sm-auto">NO</th>
                                             <th scope="col" class="col-sm-2">NIS</th>
-                                            <th scope="col" class="col-sm-3">NAMA</th>
-                                            <th scope="col" class="col-sm-2">KELAS</th>
+                                            <th scope="col" class="col-sm-4">NAMA SISWA</th>
+                                            <th scope="col" class="col-sm-2">JENIS KELAMIN</th>
                                             <th scope="col" class="col-sm-4">SEKOLAH UMUM</th>
                                         </tr>
                                     </thead>
@@ -35,7 +36,7 @@
                                                 <th scope="row">{{ $loop->iteration }}</th>
                                                 <td>{{ $sekolah->nis }}</td>
                                                 <td>{{ $sekolah->namalengkap }}</td>
-                                                <td>{{ $sekolah->kelas->kelas }}</td>
+                                                <td>{{ $sekolah->jeniskelamin }}</td>
                                                 <td>{{ $sekolah->sekolahumum }}</td>
                                             </tr>
                                         @endforeach
@@ -58,6 +59,5 @@
         $(document).ready(function() {
             $('#tablenilai').DataTable();
         });
-
     </script>
 @endsection

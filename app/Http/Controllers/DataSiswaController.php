@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Kelas;
+
 use App\Models\Siswaa;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -10,34 +10,21 @@ use Illuminate\Support\Facades\Hash;
 
 class DataSiswaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         $siswa = Siswaa::all();
         return view('datasiswa.index', compact('siswa'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function create()
     {
 
         return view('datasiswa.tambahdatasiswa');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $user = new User();
@@ -56,7 +43,9 @@ class DataSiswaController extends Controller
                 $siswa->tanggallahir = $request->tanggallahir;
                 $siswa->jeniskelamin = $request->jeniskelamin;
                 $siswa->sekolahumum = $request->sekolahumum;
-                $siswa->kodekelas = $request->kodekelas;
+                $siswa->namaortu = $request->namaortu;
+                $siswa->status = $request->status;
+                $siswa->angkatan = $request->angkatan;
                 $siswa->userid = $user->id;
                 if ($siswa->save()) {
                     return redirect('/datasiswa')->with("sukses", "Sukses menambah siswa!");
@@ -69,39 +58,21 @@ class DataSiswaController extends Controller
         }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function edit($nis)
     {
-        //
+        $siswa = Siswaa::where("nis", $nis)->first();
+        return view('datasiswa/ubahdatasiswa', ["siswa" => $siswa]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+
+    public function update(Request $request, $nis)
     {
-        //
+        $siswa = Siswaa::where("nis", $nis)->first();
+        $siswa->where("nis", $nis)->update($request->except(['_token']));
+        return redirect('/datasiswa')->with("sukses", "berhasil mengupdate data Siswa");
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+
 
     /**
      * Remove the specified resource from storage.
@@ -111,6 +82,19 @@ class DataSiswaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $datasiswa = Siswaa::where('nis', $id);
+        $id = $datasiswa->first()->userid;
+        try {
+            if ($datasiswa->delete()) {
+                $user = User::where('id', $id)->where('role', 'ortu');
+                if ($user->delete()) {
+                    return redirect('/datasiswa')->with('sukses', "Sukses menghapus data!");
+                } else {
+                    $user->delete();
+                }
+            }
+        } catch (\Throwable $th) {
+        }
+        return redirect('/datasiswa')->with('gagal', "Gagal menghapus Data");
     }
 }

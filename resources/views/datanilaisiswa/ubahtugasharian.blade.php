@@ -18,11 +18,12 @@
                                 <form class="col" method="POST"
                                     action="/datanilaisiswa/tugasharian/{{ $tugas->id_tugas }}/update">
                                     @csrf
-                                    <table class="table mt-3" id="tablenilai">
+                                    <table class="table mt-3 table-sm table-responsive-sm text-center" id="tablenilai">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th scope="row">No</th>
                                                 <th scope="col">Nama Siswa</th>
+                                                <th scope="col">Kelas</th>
                                                 <th scope="col">Mata Pelajaran</th>
                                                 <th scope="col">T1</th>
                                                 <th scope="col">T2</th>
@@ -33,7 +34,8 @@
                                             <tr>
                                                 <td scope="row">{{ $tugas->id_tugas }}</th>
                                                 <td>{{ $tugas->siswa->namalengkap }}</td>
-                                                <td>{{ $tugas->mapel->matapelajaran }}</td>
+                                                <td>{{ $tugas->pesertakelas->masterkelas->kelas->kelas }}</td>
+                                                <td>{{ $tugas->pesertakelas->masterkelas->mapel->namamapel }}</td>
                                                 <td>
                                                     <input class="form-control-range text-sm-center" type="text"
                                                         name="tugas1" value="{{ $tugas->tugas1 }}">

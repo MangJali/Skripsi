@@ -22,19 +22,19 @@
                                         <label for="kodematapelajran" class="col-sm-2 col-from-label text-gray">Kode Mata
                                             Pelajaran</label>
                                         <input type="text" class="form-control col-9" placeholder="Kode Mata Pelajaran"
-                                            name="kodematapelajaran">
+                                            name="kodematapelajaran" required>
                                     </div>
                                     <div class="row mt-3">
                                         <label for="matapelajaran" class="col-sm-2 col-from-label text-gray">Mata
                                             Pelajaran</label>
                                         <input type="text" class="form-control col-9" placeholder="Mata Pelajaran"
-                                            name="matapelajaran">
+                                            name="matapelajaran" required>
                                     </div>
                                     <div class="row mt-3">
                                         <label for="semester" class="col-sm-2 col-from-label text-gray">Tahun
                                             Kurikulum</label>
                                         <input type="text" class="form-control col-9" placeholder="Semester"
-                                            name="thnkurikulum">
+                                            name="thnkurikulum" required>
                                     </div>
                                     <div>
                                         <button type="submit" class="btn btn-primary mt-4">SIMPAN</button>

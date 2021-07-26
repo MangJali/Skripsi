@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
 use App\Models\Matapelajaran;
 use App\Models\Siswaa;
 use App\Models\Tugaskedua;
@@ -10,6 +11,7 @@ use App\Models\Ujianakhirsemeseter;
 use App\Models\Ujiantengahsemeseter;
 use App\Models\Ulanganharian;
 use App\Models\Penilaianhasilbelajar;
+use App\Models\Pesertakelas;
 use App\Models\Tenagapendidik;
 use App\Models\Tugaskeempat;
 use App\Models\Tugasketiga;
@@ -27,6 +29,7 @@ class PenilaianHasilBelajarController extends Controller
      */
     public function index()
     {
+        $kelas = Kelas::all();
         if (auth()->user()->role == "admin") {
             $array = $this->getData(TugasSiswa::all(), Ulanganharian::all(), Ujiantengahsemester::all(), Ujianakhirsemester::all());
         } else if (auth()->user()->role == "guru") {
@@ -52,7 +55,7 @@ class PenilaianHasilBelajarController extends Controller
             $siswa = Siswaa::where("userid", auth()->user()->id)->first();
             $array = $this->getData($siswa->tugassiswa()->get(), $siswa->ulanganharian()->get(), $siswa->uts()->get(), $siswa->uas()->get());
         }
-        return view('penilaianhasilbelajar.index', ["rapor" => $array]);
+        return view('penilaianhasilbelajar.index', ["rapor" => $array], ['kelas' => $kelas]);
     }
 
     public function getData($tugas, $uh, $uts, $uas)
@@ -60,27 +63,28 @@ class PenilaianHasilBelajarController extends Controller
         if (count($tugas) > 0 || count($uh) > 0 || count($uts) > 0 || count($uas) > 0) {
             $array = [];
             foreach ($tugas as $key => $value) {
-                $array[$value->nis][$value->kodemapel]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
-                $array[$value->nis][$value->kodemapel]["namamapel"] = Matapelajaran::where("kodemapel", $value->kodemapel)->first()->matapelajaran;
-                $array[$value->nis][$value->kodemapel]["tugas1"] = $value->tugas1;
-                $array[$value->nis][$value->kodemapel]["tugas2"] = $value->tugas2;
-                $array[$value->nis][$value->kodemapel]["tugas3"] = $value->tugas3;
+                $array[$value->nis][$value->id]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
+                $array[$value->nis][$value->id]["id"] = Pesertakelas::where("id", $value->id)->first()->masterkelas->kelas->kelas;
+                $array[$value->nis][$value->id]["mapel"] = Pesertakelas::where("id", $value->id)->first()->masterkelas->mapel->namamapel;
+                $array[$value->nis][$value->id]["tugas1"] = $value->tugas1;
+                $array[$value->nis][$value->id]["tugas2"] = $value->tugas2;
+                $array[$value->nis][$value->id]["tugas3"] = $value->tugas3;
             }
             foreach ($uh as $key => $value) {
-                $array[$value->nis][$value->kodemapel]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
-                $array[$value->nis][$value->kodemapel]["namamapel"] = Matapelajaran::where("kodemapel", $value->kodemapel)->first()->matapelajaran;
-                $array[$value->nis][$value->kodemapel]["uh1"] = $value->ulanganharian1;
-                $array[$value->nis][$value->kodemapel]["uh2"] = $value->ulanganharian2;
+                $array[$value->nis][$value->id]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
+                $array[$value->nis][$value->id]["id"] = Pesertakelas::where("id", $value->id)->first()->masterkelas->kelas->kelas;
+                $array[$value->nis][$value->id]["uh1"] = $value->ulanganharian1;
+                $array[$value->nis][$value->id]["uh2"] = $value->ulanganharian2;
             }
             foreach ($uts as $key => $value) {
-                $array[$value->nis][$value->kodemapel]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
-                $array[$value->nis][$value->kodemapel]["namamapel"] = Matapelajaran::where("kodemapel", $value->kodemapel)->first()->matapelajaran;
-                $array[$value->nis][$value->kodemapel]["uts"] = $value->ujiantengahsemester;
+                $array[$value->nis][$value->id]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
+                $array[$value->nis][$value->id]["id"] = Pesertakelas::where("id", $value->id)->first()->masterkelas->kelas->kelas;
+                $array[$value->nis][$value->id]["uts"] = $value->ujiantengahsemester;
             }
             foreach ($uas as $key => $value) {
-                $array[$value->nis][$value->kodemapel]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
-                $array[$value->nis][$value->kodemapel]["namamapel"] = Matapelajaran::where("kodemapel", $value->kodemapel)->first()->matapelajaran;
-                $array[$value->nis][$value->kodemapel]["uas"] = $value->ujianakhirsemester;
+                $array[$value->nis][$value->id]["namalengkap"] = Siswaa::where("nis", $value->nis)->first()->namalengkap;
+                $array[$value->nis][$value->id]["id"] = Pesertakelas::where("id", $value->id)->first()->masterkelas->kelas->kelas;
+                $array[$value->nis][$value->id]["uas"] = $value->ujianakhirsemester;
             }
             return $array;
         } else {

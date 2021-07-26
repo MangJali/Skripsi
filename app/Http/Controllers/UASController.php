@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kelas;
 use App\Models\Matapelajaran;
+use App\Models\Pesertakelas;
 use App\Models\Siswaa;
 use App\Models\Tenagapendidik;
 use App\Models\Ujianakhirsemester;
@@ -17,7 +19,7 @@ class UASController extends Controller
      */
     public function index()
     {
-        $nilaiuas = Ujianakhirsemester::all();
+        $kelas = Kelas::all();
         if (auth()->user()->role == "admin") {
             $nilaiuas = Ujianakhirsemester::all();
         } else {
@@ -28,28 +30,49 @@ class UASController extends Controller
             // $nilaitugas->mapel()->wherePivot("nip",$guru->nip)->get();
             // print_r($nilaitugas);
         }
-        return view('datanilaisiswa.ujianakhirsemester', compact('nilaiuas'));
+        return view('datanilaisiswa.ujianakhirsemester', ['nilaiuas' => $nilaiuas], ['kelas' => $kelas]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
+    public function filter_kelas(Request $request)
+    {
+        if ($request->has('kelas')) {
+            $tugas = Ujianakhirsemester::select("siswas.namalengkap", "kelases.kelas", "matapelajarans.namamapel", "tugassiswas.*")
+                ->join("kelases", "tugassiswas.id_kelas", "=", "kelases.id_kelas")
+                ->join("siswas", "tugassiswas.nis", "=", "siswas.nis")
+                ->join("matapelajarans", "tugassiswas.id_mapel", "=", "matapelajarans.id_mapel")
+                ->where('kelases.id_kelas', '=', $request->kelas)
+                ->get();
+        }
+
+
+        return response()->json($tugas);
+    }
+    public function filter_mapel(Request $request)
+    {
+        if ($request->has('mapel')) {
+            $tugas = Ujianakhirsemester::select("siswas.namalengkap", "kelases.kelas", "matapelajarans.namamapel", "tugassiswas.*")
+                ->join("kelases", "tugassiswas.id_kelas", "=", "kelases.id_kelas")
+                ->join("siswas", "tugassiswas.nis", "=", "siswas.nis")
+                ->join("matapelajarans", "tugassiswas.id_mapel", "=", "matapelajarans.id_mapel")
+                ->where('matapelajarans.id_mapel', '=', $request->namamapel)
+                ->get();
+        }
+
+
+        return response()->json($tugas);
+    }
+
     public function create()
     {
-        $mapel = Matapelajaran::all();
-        $siswa = Siswaa::all();
+        $kelas = Pesertakelas::all();
         $array = [];
-        foreach ($siswa as $key => $value) {
-            foreach ($mapel as $key1 => $value1) {
-                $tugassiswa = Ujianakhirsemester::where(["kodemapel" => $value1->kodemapel, "nis" => $value->nis])->get();
-                if (count($tugassiswa) == 0) {
-                    $uasbaru = new Ujianakhirsemester();
-                    $uasbaru->nis = $value->nis;
-                    $uasbaru->kodemapel = $value1->kodemapel;
-                    array_push($array, $uasbaru);
-                }
+        foreach ($kelas as $value) {
+            $tugassiswa = Ujianakhirsemester::where(["id_uas" => $value->id])->get();
+            if (count($tugassiswa) == 0) {
+                $uasbaru = new Ujianakhirsemester();
+                $uasbaru->id = $value->id;
+                array_push($array, $uasbaru);
             }
         }
         return view('datanilaisiswa/tambahujianakhirsemester', ['uasbaru' => $array]);
@@ -63,16 +86,20 @@ class UASController extends Controller
      */
     public function store(Request $request)
     {
-        if (isset($request->nis)) {
-            foreach ($request->nis as $key => $value) {
+        if (isset($request->id_uas)) {
+            foreach ($request->id_uas as $key => $value) {
                 $nilaiuas = new Ujianakhirsemester;
-                $nilaiuas->nis = $value;
-                $nilaiuas->kodemapel = $request->kodemapel[$key];
-                $nilaiuas->ujianakhirsemester = $request->uas[$key];
+                $nilaiuas->id_uas = $value;
+                $nilaiuas->id = $request->id_peserta[$key];
+                $nilaiuas->nis = $request->nis[$key];
+                $nilaiuas->id_kelas = $request->id_kelas[$key];
+                $nilaiuas->id_mapel = $request->id_mapel[$key];
+                $nilaiuas->nip = $request->nip[$key];
+                $nilaiuas->ujianakhirsemester = $request->uas[$key] == null ? 0 : $request->tugas1[$key];
                 $nilaiuas->save();
             }
         }
-        return redirect('datanilaisiswa/ujianakhirsemester')->with('sukses','Sukses menambahkan data!');
+        return redirect('datanilaisiswa/ujianakhirsemester')->with('sukses', 'Sukses menambahkan data!');
     }
 
     /**
@@ -120,6 +147,9 @@ class UASController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $uas = Ujianakhirsemester::where('id_uas', $id)->first();
+        if ($uas->delete()) {
+            return redirect('/datanilaisiswa/ujianakhirsemester')->with('sukses', "Sukses menghapus data!");
+        }
     }
 }

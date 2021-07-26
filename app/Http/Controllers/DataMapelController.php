@@ -67,8 +67,10 @@ class DataMapelController extends Controller
      */
     public function edit($id)
     {
-        //
+        $mapel = Matapelajaran::where("id_mapel", $id)->first();
+        return view('datamapel/ubahmapel', compact('mapel'));
     }
+
 
     /**
      * Update the specified resource in storage.
@@ -79,7 +81,9 @@ class DataMapelController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $mapel = Matapelajaran::where("id_mapel", $id)->first();
+        $mapel->where("id_mapel", $id)->update($request->except(['_token']));
+        return redirect('/datamapel')->with("sukses", "berhasil mengupdate data absen!");
     }
 
     /**
@@ -90,7 +94,7 @@ class DataMapelController extends Controller
      */
     public function destroy($id)
     {
-        $mapel = Matapelajaran::where('kodemapel', $id)->first();
+        $mapel = Matapelajaran::where('id_mapel', $id)->first();
         if ($mapel->delete()) {
             return redirect('/datamapel')->with('sukses', "Sukses menghapus data!");
         }

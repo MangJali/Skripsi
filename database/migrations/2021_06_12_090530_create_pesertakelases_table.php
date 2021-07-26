@@ -15,8 +15,10 @@ class CreatePesertakelasesTable extends Migration
     {
         Schema::create('pesertakelases', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_kelas');
-            $table->string('nis', 9);
+            $table->integer('id_master');
+            $table->string('nis');
+            $table->foreign('id_master')->references('id_master')->on('masterkelases')->onDelete('cascade');
+            $table->foreign('nis')->references('nis')->on('siswas')->onDelete('cascade');
             $table->timestamps();
         });
     }

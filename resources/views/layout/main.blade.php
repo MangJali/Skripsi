@@ -12,8 +12,8 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
     <!-- Tempusdominus Bbootstrap 4 -->
-    <link rel="stylesheet"
-        href="{{ asset('/dashboard/plugins/tempusdominus-bootstrap-5/css/tempusdominus-bootstrap-5.min.css') }}">
+    {{-- <link rel="stylesheet"
+        href="{{ asset('/dashboard/plugins/tempusdominus-bootstrap-5/css/tempusdominus-bootstrap-5.min.css') }}"> --}}
     <!-- iCheck -->
     <link rel="stylesheet" href="{{ asset('/dashboard/plugins/icheck-bootstrap/icheck-bootstrap.min.css') }}">
     <!-- Theme style -->
@@ -32,13 +32,17 @@
     <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
     <!-- DatePicker-->
     <link rel="stylesheet" href="{{ asset('/air-datepicker/dist/css/datepicker.css') }}">
+    <!-- Autocomplete-->
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+        crossorigin="anonymous"></script>
+
+    @yield("custom-css")
 
 
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
     <div class="wrapper">
-
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-lightblue navbar-light">
             <!-- Left navbar links -->
@@ -58,25 +62,6 @@
             </ul>
         </nav>
         <!-- Right navbar links -->
-
-
-        {{-- <nav class="main-header navbar navbar-expand navbar-dark navbar-gray-dark">
-    <ul class="navbar-nav">
-      <li class="nav-item">
-        <button
-          data-widget="pushmenu"
-          class="btn btn-link nav-link pushMenu">
-          <i class="fas fa-bars"></i>
-        </button>
-      </li>
-    </ul>
-    <ul class="navbar-nav ml-auto">
-      <li class="nav-item">
-        <button class="btn btn-sm btn-link text-bold text-light"><i class="fas fa-arrow-circle-left"></i>&ensp;kembali</button>
-      </li>
-    </ul>
-  </nav> --}}
-        <!-- /.navbar -->
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-light-primary elevation-4 bg">
@@ -120,21 +105,10 @@
 
                         @if (auth()->user()->role == 'admin')
                             <li class="nav-item mt-4 margin-top has-treeview">
-                                <a href="{{ url('/datamapel') }}" class="nav-link">
-                                    <i class="nav-icon fas fa-folder-open"></i>
-                                    <p>
-                                        Data Mapel
-                                    </p>
-                                </a>
-                            </li>
-                        @endif
-
-                        @if (auth()->user()->role == 'admin')
-                            <li class="nav-item mt-4 margin-top has-treeview">
                                 <a href="{{ url('/datasiswa') }}" class="nav-link">
                                     <i class="nav-icon fas fa-copy"></i>
                                     <p>
-                                        Data Siswa
+                                        Siswa
                                     </p>
                                 </a>
                             </li>
@@ -151,15 +125,67 @@
                             </li>
                         @endif
 
+                        @if (auth()->user()->role == 'admin')
+                            <li class="nav-item mt-4 margin-top has-treeview">
+                                <a href="{{ url('/datamapel') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-folder-open"></i>
+                                    <p>
+                                        Akademik
+                                    </p>
+                                    <i class="right fas fa-angle-left"></i>
+                                </a>
+                                <ul class="nav nav-treeview">
+                                    <li class="nav-item mt-4 margin-top has-treeview">
+                                        <a href="{{ url('/datamapel') }}" class="nav-link">
+                                            <i class="nav-icon fas fa-folder-open"></i>
+                                            <p>
+                                                Mata Pelajaran
+                                            </p>
+                                        </a>
+                                    </li>
+                                    <li class="nav-item mt-4 margin-top has-treeview">
+                                        <a href="{{ url('/datakelas') }}" class="nav-link">
+                                            <i class="nav-icon fas fa-building"></i>
+                                            <p>
+                                                Kelas
+                                            </p>
+                                        </a>
 
-                        <li class="nav-item mt-4 margin-top has-treeview">
-                            <a href="{{ url('/dataabsensi') }}" class="nav-link">
-                                <i class="nav-icon fas fa-check-square"></i>
-                                <p>
-                                    Absensi Siswa
-                                </p>
-                            </a>
-                        </li>
+                                    </li>
+                                    <li class="nav-item mt-4 margin-top has-treeview">
+                                        <a href="{{ url('/pesertakelas') }}" class="nav-link">
+                                            <i class="nav-icon fas fa-building"></i>
+                                            <p>
+                                                Peserta Kelas
+                                            </p>
+                                        </a>
+
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
+
+                        @if (auth()->user()->role == 'admin' || auth()->user()->role == 'guru')
+                            <li class="nav-item mt-4 margin-top has-treeview">
+                                <a href="{{ url('/dataabsensi') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-check-square"></i>
+                                    <p>
+                                        Absensi Siswa
+                                    </p>
+                                </a>
+                            </li>
+                        @endif
+
+                        @if (auth()->user()->role == 'ortu')
+                            <li class="nav-item mt-4 margin-top has-treeview">
+                                <a href="{{ url('/dataabsensi/indexsiswa') }}" class="nav-link">
+                                    <i class="nav-icon fas fa-check-square"></i>
+                                    <p>
+                                        Absensi Siswa
+                                    </p>
+                                </a>
+                            </li>
+                        @endif
 
                         @if (auth()->user()->role == 'admin' || auth()->user()->role == 'guru')
                             <li class="nav-item mt-4 margin-top has-treeview">
@@ -259,7 +285,6 @@
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
         $.widget.bridge('uibutton', $.ui.button)
-
     </script>
     <!-- Bootstrap 4 -->
     <script src="{{ asset('/dashboard/plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
@@ -293,6 +318,10 @@
     <!-- DatePicker -->
     <script src="{{ asset('/air-datepicker/dist/js/datepicker.js') }}"></script>
     <script src="{{ asset('/air-datepicker/dist/js/i18n/datepicker.en.js') }}"></script>
+
+    <!--Autocomplete-->
+
+
     <script>
         toastr.options = {
             "closeButton": false,
@@ -311,21 +340,21 @@
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
-
     </script>
     @if (Session::has('sukses'))
         <script>
             toastr.success("{{ Session::get('sukses') }}", "Sukses");
-
         </script>
     @endif
     @if (Session::has('gagal'))
         <script>
             toastr.error("{{ Session::get('gagal') }}", "Gagal");
-
         </script>
     @endif
     @yield('script')
+    <!--Autocomplete-->
+
+
 </body>
 
 </html>

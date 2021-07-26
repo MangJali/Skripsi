@@ -15,12 +15,17 @@ class CreateUlanganhariansTable extends Migration
     {
         Schema::create('ulanganharians', function (Blueprint $table) {
             $table->integer('id_uh')->autoIncrement();
-            $table->string('nis', 9);
-            $table->string('id_kelas');
-            // $table->foreign('kodemapel')->references('kodemapel')->on('matapelajarans');
-            // $table->foreign('nis')->references('nis')->on('siswas');
-            $table->string('ulanganharian1');
-            $table->string('ulanganharian2');
+            $table->integer('id');
+            $table->string('nis');
+            $table->integer('id_kelas');
+            $table->string('id_mapel');
+            $table->string('nip');
+            $table->foreign('id')->references('id')->on('pesertakelases')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('nis')->references('nis')->on('siswas');
+            $table->foreign('id_kelas')->references('id_kelas')->on('kelases');
+            $table->foreign('id_mapel')->references('id_mapel')->on('matapelajarans');
+            $table->string('ulanganharian1')->nullable();
+            $table->string('ulanganharian2')->nullable();
             $table->timestamps();
         });
     }

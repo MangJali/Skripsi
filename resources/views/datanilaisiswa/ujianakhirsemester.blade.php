@@ -12,7 +12,7 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col md-4">
-                        <h1 class="text-bold text-center">Nilai Ujian Akhir Semester</h1>
+                        <h1 class="text-bold text-center">DATA NILAI UAS</h1>
                         <div class="card card-success card-outline mt-4">
                             <div class="card-body">
                                 @if (auth()->user()->role == 'admin')
@@ -21,36 +21,63 @@
                                         Tambah Data Nilai
                                     </a>
                                     <br> <br>
-                                @endif
-                                <form class="col">
-                                    @csrf
-                                    <table class="table mt-3 table-sm table-responsive-sm text-center" id="tablenilai">
-                                        <thead class="thead-dark">
-                                            <tr>
-                                                <th scope="col" class="col-sm-auto">NO</th>
-                                                <th scope="col" class="col-sm-3">NIS</th>
-                                                <th scope="col" class="col-sm-6">MATA PELAJARAN</th>
-                                                <th scope="col" class="col-sm-2">UAS</th>
-                                                <th scope="col" class="col-sm-1">AKSI</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($nilaiuas as $item)
-                                                <tr class="text-sm-center">
 
-                                                    <th scope="row">{{ $loop->iteration }}</th>
-                                                    <td class="text-left">{{ $item->siswa->namalengkap }}</td>
-                                                    <td class="text-left">{{ $item->mapel->matapelajaran }}</td>
-                                                    <td class="text-left">{{ $item->ujianakhirsemester }}</td>
-                                                    <td>
-                                                        <a href="/datanilaisiswa/ujianakhirsemester/{{ $item->id_uas }}/edit"
-                                                            class="badge badge-success">ubah</a>
-                                                    </td>
-                                                </tr>
+
+                                @endif
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
+                                        <label>Kelas</label>
+                                        <select id="filter-kelas" class="form-control form-control-sm filter">
+                                            <option value="" selected disabled>Pilih Kelas</option>
+                                            @foreach ($kelas as $kelas)
+                                                <option value="{{ $kelas->id_kelas }}">
+                                                    {{ $kelas->kelas }}
+                                                </option>
                                             @endforeach
-                                        </tbody>
-                                    </table>
-                                </form>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                @csrf
+                                <table class="table table-bordered mt-3 table-sm table-responsive-sm text-center"
+                                    id="tablenilai">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col" class="col-sm-auto">NO</th>
+                                            <th scope="col" class="col-sm-3">NAMA SISWA</th>
+                                            <th scope="col" class="col-sm-2">KELAS</th>
+                                            <th scope="col" class="col-sm-3">MATA PELAJARAN</th>
+                                            <th scope="col" class="col-sm-2">UAS</th>
+                                            <th scope="col" class="col-sm-auto">AKSI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($nilaiuas as $item)
+                                            <tr class="text-sm-center">
+
+                                                <th scope="row">{{ $loop->iteration }}</th>
+                                                <td>{{ $item->pesertakelas->siswa->namalengkap }}</td>
+                                                <td>{{ $item->pesertakelas->masterkelas->kelas->kelas }}</td>
+                                                <td>{{ $item->pesertakelas->masterkelas->mapel->namamapel }}</td>
+                                                <td>{{ $item->ujianakhirsemester }}</td>
+                                                <td>
+                                                    <a href="/datanilaisiswa/ujianakhirsemester/{{ $item->id_uas }}/edit"
+                                                        class="btn btn-sm btn-success">Ubah</a>
+                                                    <form class="badge"
+                                                        action="/datanilaisiswa/ujianakhirsemester/{{ $item->id_uas }}/delete"
+                                                        method="POST" onsubmit="return confirm('Yakin Menghapus Data?')">
+                                                        @csrf
+                                                        {{ method_field('POST') }}
+                                                        <button class=" btn btn-sm btn-danger" type="submit">
+                                                            Hapus</button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+
                             </div>
                         </div>
                     </div>
@@ -68,6 +95,46 @@
         $(document).ready(function() {
             $('#tablenilai').DataTable();
         });
+    </script>
 
+    <script>
+        $("#filter-kelas").on('change', function() {
+            let kelas = $("#filter-kelas").val()
+
+            $.ajax({
+                type: 'GET',
+                url: '/datanilaisiswa/filter-kelas',
+                data: {
+                    kelas: kelas
+                },
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                dataType: 'json',
+                success: function(response) {
+                    console.log(response);
+                    var table = $('#tablenilai').DataTable();
+
+                    table.clear().draw();
+
+                    $.each(response, function(index, value) {
+                        table.row.add([
+                            index + 1,
+                            value.namalengkap,
+                            value.kelas,
+                            value.namamapel,
+                            value.tugas1,
+                            value.tugas2,
+                            value.tugas3,
+                            '<td><a href="/datanilaisiswa/tugasharian/' + value.id +
+                            '/edit" class="badge badge-success">ubah</a> </td>',
+                        ]).draw();
+                    });
+                },
+                error: function(response) {
+                    console.log("err");
+                }
+            });
+        })
     </script>
 @endsection

@@ -8,19 +8,21 @@ use Illuminate\Database\Eloquent\Model;
 class Tenagapendidik extends Model
 {
     use HasFactory;
+
     protected $table = "tenagapendidiks";
 
     protected $keyType = 'string';
 
     protected $primaryKey = 'nip';
 
-    public $incrementing = false;
+    protected $fillable = [
 
+        'nip', 'namapendidik'
 
+    ];
 
-
-    public function mapel()
+    public function kelas()
     {
-        return $this->hasMany(Matapelajaran::class);
+        return $this->hasMany(Masterkelas::class);
     }
 }

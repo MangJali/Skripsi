@@ -17,7 +17,7 @@
                             <div class="card-body">
                                 <form method="POST" action="/dataabsensi/{{ $absensi->id_absensi }}/update">
                                     @csrf
-                                    <table class="table mt-3" id="tablenilai">
+                                    <table class="table mt-3 table-sm table-responsive-sm text-center" id="tablenilai">
                                         <thead class="thead-dark">
                                             <tr>
                                                 <th scope="row">No</th>
@@ -32,9 +32,9 @@
                                         <tbody>
                                             <tr>
                                                 <td scope="row">{{ $absensi->id_absensi }}</th>
-                                                <td>{{ $absensi->siswa->namalengkap }}</td>
-                                                <td>{{ $absensi->mapel->matapelajaran }}</td>
-                                                <td>{{ $absensi->siswa->kelas->kelas }}</td>
+                                                <td>{{ $absensi->pesertakelas->siswa->namalengkap }}</td>
+                                                <td>{{ $absensi->pesertakelas->masterkelas->mapel->namamapel }}</td>
+                                                <td>{{ $absensi->pesertakelas->masterkelas->kelas->kelas }}</td>
                                                 <td>
                                                     <input class="form-control-range text-sm-center" type="text"
                                                         name="alpha" value="{{ $absensi->alpha }}">

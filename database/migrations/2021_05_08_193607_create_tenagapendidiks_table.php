@@ -14,7 +14,7 @@ class CreateTenagapendidiksTable extends Migration
     public function up()
     {
         Schema::create('tenagapendidiks', function (Blueprint $table) {
-            $table->bigInteger('nip')->primary();
+            $table->string('nip')->primary();
             $table->string('namapendidik');
             $table->string('alamat');
             $table->char('jeniskelamin');

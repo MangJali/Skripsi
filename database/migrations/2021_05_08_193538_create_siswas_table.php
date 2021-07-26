@@ -14,14 +14,16 @@ class CreateSiswasTable extends Migration
     public function up()
     {
         Schema::create('siswas', function (Blueprint $table) {
-            $table->string('nis', 9)->primary();
+            $table->string('nis')->primary();
             $table->string('namalengkap');
             $table->string('alamat');
             $table->string('tempatlahir');
-            $table->string('tanggallahir');
+            $table->date('tanggallahir');
             $table->string('jeniskelamin');
             $table->string('sekolahumum');
-            // $table->foreign('kodekelas')->references('kodekelas')->on('kelases');
+            $table->string('namaortu');
+            $table->string('status');
+            $table->string('angkatan');
             $table->timestamps();
         });
     }

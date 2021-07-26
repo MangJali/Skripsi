@@ -14,28 +14,28 @@ class Siswaa extends Model
 
     protected $primaryKey = 'nis';
 
-    protected $fillable = ['nis', 'namalengkap', 'alamat', 'tempatlahir', 'tanggallahir', 'jeniskelamin', 'sekolahumum', 'kodekelas','userid'];
+    protected $fillable = ['nis', 'namalengkap'];
 
-    public function kelas()
+    public function pesertakelas()
     {
-        return $this->belongsTo(Kelas::class, 'kodekelas');
+        return $this->hasMany(Pesertakelas::class);
     }
 
     public function tugassiswa()
     {
-        return $this->hasMany(TugasSiswa::class,"nis","nis");
+        return $this->hasMany(TugasSiswa::class, "nis", "nis");
     }
 
     public function ulanganharian()
     {
-        return $this->hasMany(Ulanganharian::class,"nis","nis");
+        return $this->hasMany(Ulanganharian::class, "nis", "nis");
     }
     public function uts()
     {
-        return $this->hasMany(Ujiantengahsemester::class,"nis","nis");
+        return $this->hasMany(Ujiantengahsemester::class, "nis", "nis");
     }
     public function uas()
     {
-        return $this->hasMany(Ujianakhirsemester::class,"nis","nis");
+        return $this->hasMany(Ujianakhirsemester::class, "nis", "nis");
     }
 }

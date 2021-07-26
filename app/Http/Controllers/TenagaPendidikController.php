@@ -112,12 +112,11 @@ class TenagaPendidikController extends Controller
      */
     public function destroy($id)
     {
-        $tenagapendidik = Tenagapendidik::where('nip', $id)->first();
-
+        $tenagapendidik = Tenagapendidik::where('nip', $id);
+        $id = $tenagapendidik->first()->userid;
         try {
             if ($tenagapendidik->delete()) {
-                $user = new User();
-                $user->role = 'guru';
+                $user = User::where('id', $id)->where('role', 'guru');
                 if ($user->delete()) {
                     return redirect('/tenagapendidik')->with('sukses', "Sukses menghapus data!");
                 } else {

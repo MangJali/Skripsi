@@ -22,33 +22,40 @@
                                     </a>
                                     <br> <br>
                                 @endif
-                                <table class="table mt-3" id="tablenilai">
+                                <table class="table table-bordered mt-3 table-sm table-responsive-sm text-center"
+                                    id="tablenilai" style="font-family: cursive">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th scope="row">No</th>
-                                            <th scope="col">Nama Siswa</th>
-                                            <th scope="col">Mata Pelajaran</th>
-                                            <th scope="col">Kelas</th>
-                                            <th scope="col">Hadir</th>
-                                            <th scope="col">Ijin</th>
-                                            <th scope="col">Alpha</th>
-                                            <th scope="col">AKSI</th>
+                                            <th scope="col" class="text-uppercase">Nama Siswa</th>
+                                            <th scope="col" class="text-uppercase">Kelas</th>
+                                            <th scope="col" class="text-uppercase">Mata Pelajaran</th>
+                                            <th scope="col" class="text-uppercase">Hadir</th>
+                                            <th scope="col" class="text-uppercase">Ijin</th>
+                                            <th scope="col" class="text-uppercase">Alpha</th>
+                                            <th scope="col" class="text-uppercase">AKSI</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach ($absensi as $item)
                                             <tr>
                                                 <td scope="row">{{ $loop->iteration }}</th>
-                                                <td>{{ $item->siswa->namalengkap }}</td>
-                                                <td>{{ $item->mapel->matapelajaran }}</td>
-                                                <td>{{ $item->siswa->kelas->kelas }}</td>
+                                                <td>{{ $item->pesertakelas->siswa->namalengkap }}</td>
+                                                <td>{{ $item->pesertakelas->masterkelas->kelas->kelas }}</td>
+                                                <td>{{ $item->pesertakelas->masterkelas->mapel->namamapel }}</td>
                                                 <td>{{ $item->alpha }}</td>
                                                 <td>{{ $item->ijin }}</td>
                                                 <td>{{ $item->hadir }}</td>
                                                 <td>
                                                     <a href="/dataabsensi/ubahabsensi/{{ $item->id_absensi }}/edit"
-                                                        class="badge badge-success">edit</a>
-                                                    <a href="" class="badge badge-danger">delete</a>
+                                                        class="btn btn-sm btn-success">Ubah</a>
+                                                    <form class="badge"
+                                                        action="/dataabsensi/{{ $item->id_absensi }}/delete" method="POST"
+                                                        onsubmit="return confirm('Yakin Menghapus Data?')">
+                                                        @csrf
+                                                        {{ method_field('POST') }}
+                                                        <button class="btn btn-sm btn-danger" type="submit">Hapus</button>
+                                                    </form>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -69,6 +76,5 @@
         $(document).ready(function() {
             $('#tablenilai').DataTable();
         });
-
     </script>
 @endsection

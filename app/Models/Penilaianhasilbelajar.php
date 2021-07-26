@@ -11,17 +11,21 @@ class Penilaianhasilbelajar extends Model
 
     protected $table = 'nilais';
 
-    protected $fillable = ['id', 'nis', 'kodemapel', 'id_tugas1', 'id_tugas2', 'id_tugas3', 'id_tugas4', 'id_uh', 'id_uts', 'id_uas'];
+    protected $fillable = ['id', 'nis', 'id_mepel', 'id_tugas1', 'id_tugas2', 'id_tugas3', 'id_tugas4', 'id_uh', 'id_uts', 'id_uas'];
 
-    public function mapel()
+    public function pesertakelas()
     {
-        return $this->belongsTo(Matapelajaran::class, 'kodemapel');
+        return $this->belongsTo(Pesertakelas::class, 'id');
     }
+    // public function mapel()
+    // {
+    //     return $this->belongsTo(Matapelajaran::class, 'id_mapel');
+    // }
 
-    public function siswa()
-    {
-        return $this->belongsTo(Siswaa::class, 'nis');
-    }
+    // public function siswa()
+    // {
+    //     return $this->belongsTo(Siswaa::class, 'nis');
+    // }
 
     public function tugas1()
     {

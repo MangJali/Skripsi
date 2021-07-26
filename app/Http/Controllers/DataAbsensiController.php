@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Absensi;
 use App\Models\Matapelajaran;
+use App\Models\Pesertakelas;
 use App\Models\Siswaa;
 use App\Models\Tenagapendidik;
 use Illuminate\Http\Request;
@@ -26,11 +27,16 @@ class DataAbsensiController extends Controller
                 $guru = Tenagapendidik::where("userid", auth()->user()->id)->first();
                 $query->where("nip", $guru->nip);
             })->get();
-        } else {
-            $siswa = Siswaa::where("userid", auth()->user()->id)->first();
-            $absensi = Absensi::where('nis', $siswa->nis)->get();
         }
         return view('dataabsensi.index', compact('absensi'));
+    }
+    public function indexsiswa()
+    {
+        if (auth()->user()->role == "ortu") {
+            $siswa = Siswaa::where("userid", auth()->user()->id)->first();
+            $absen = Absensi::where('nis', $siswa->nis)->get();
+        }
+        return view('dataabsensi.indexsiswa', compact('absen'));
     }
 
     /**
@@ -40,41 +46,36 @@ class DataAbsensiController extends Controller
      */
     public function create()
     {
-        $mapel = Matapelajaran::all();
-        $siswa = Siswaa::all();
+        $mapel = Pesertakelas::all();
         $absensi = [];
-        foreach ($siswa as $key => $value) {
-            foreach ($mapel as $key1 => $value1) {
-                $tugassiswa = Absensi::where(["kodemapel" => $value1->kodemapel, "nis" => $value->nis])->get();
-                if (count($tugassiswa) == 0) {
-                    $baru = new Absensi();
-                    $baru->nis = $value->nis;
-                    $baru->kodemapel = $value1->kodemapel;
-                    array_push($absensi, $baru);
-                }
+        foreach ($mapel as $value) {
+            $dataabsen = Absensi::where(["id_absensi" => $value->id])->get();
+            if (count($dataabsen) == 0) {
+                $baru = new Absensi();
+                $baru->id = $value->id;
+                array_push($absensi, $baru);
             }
         }
         return view('dataabsensi.tambahabsensi', compact('absensi'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
-        if (isset($request->nis)) {
-            foreach ($request->nis as $key => $value) {
-                $nilaiuts = new Absensi();
-                $nilaiuts->nis = $value;
-                $nilaiuts->kodemapel = $request->kodemapel[$key];
-                $nilaiuts->ijin = $request->ijin[$key] == null ? 0 : $request->ijin[$key];
-                $nilaiuts->hadir = $request->hadir[$key] == null ? 0 : $request->hadir[$key];
-                $nilaiuts->alpha = $request->alpha[$key] == null ? 0 : $request->alpha[$key];
-                // print_r($nilaiuts);
-                $nilaiuts->save();
+        if (isset($request->id_absensi)) {
+            foreach ($request->id_absensi as $key => $value) {
+                $absensi = new Absensi;
+                $absensi->id_absensi = $value;
+                $absensi->id = $request->id_peserta[$key];
+                $absensi->nis = $request->nis[$key];
+                $absensi->id_kelas = $request->id_kelas[$key];
+                $absensi->id_mapel = $request->id_mapel[$key];
+                $absensi->nip = $request->nip[$key];
+                $absensi->ijin = $request->ijin[$key] == null ? 0 : $request->ijin[$key];
+                $absensi->hadir = $request->hadir[$key] == null ? 0 : $request->hadir[$key];
+                $absensi->alpha = $request->alpha[$key] == null ? 0 : $request->alpha[$key];
+
+                $absensi->save();
             }
         }
         return redirect('/dataabsensi')->with('sukses', "sukses menambahkan data!");
@@ -91,12 +92,7 @@ class DataAbsensiController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function edit($id)
     {
         $absensi = Absensi::where("id_absensi", $id)->first();
@@ -125,6 +121,9 @@ class DataAbsensiController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $absensi = Absensi::where('id_absensi', $id)->first();
+        if ($absensi->delete()) {
+            return redirect('/dataabsensi')->with('sukses', "Sukses menghapus data!");
+        }
     }
 }

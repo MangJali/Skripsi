@@ -13,23 +13,19 @@ class Matapelajaran extends Model
 
     protected $table = 'matapelajarans';
 
-    protected $primaryKey = 'kodemapel';
+    protected $primaryKey = 'id_mapel';
 
-    protected $fillable = ['kodemapel', 'matapelajaran', 'kodekelas', 'nip',];
+    protected $fillable = ['id_mapel', 'namamapel'];
 
-    public function guru()
+
+    public function masterkelas()
     {
-        return $this->belongsTo(Tenagapendidik::class, 'nip');
+        return $this->hasMany(Masterkelas::class);
     }
-    
+
     public function kelas()
     {
-        return $this->belongsTo(Kelas::class, 'kodekelas');
-    }
-
-    public function semester()
-    {
-        return $this->belongsTo(Semester::class, 'id_semester');
+        return $this->hasMany(Kelas::class);
     }
 
     public function tugassiswa()

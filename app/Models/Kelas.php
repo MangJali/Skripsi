@@ -9,19 +9,20 @@ class Kelas extends Model
 {
     use HasFactory;
 
-    public $incrementing = false;
-
-    protected $keyType = 'string';
+    protected $keyType = 'integer';
 
     protected $table = 'kelases';
 
-    protected $primaryKey = 'kodekelas';
+    protected $primaryKey = 'id_kelas';
 
-    protected $fillable = ['kodekelas', 'kelas'];
+    protected $fillable = ['id_kelas',  'kelas'];
 
-
-    public function siswa()
+    public function masterkelas()
     {
-        return $this->hasMany(Siswaa::class);
+        return $this->hasMany(Masterkelas::class);
+    }
+    public function tugassiswa()
+    {
+        return $this->hasMany(TugasSiswa::class);
     }
 }
